@@ -48,7 +48,7 @@
 ```
 - maven-surefire-plugin
 ```
- <groupId>org.apache.maven.plugins</groupId>
+            <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.20</version>
                 <configuration>
