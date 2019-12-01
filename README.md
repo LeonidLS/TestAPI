@@ -74,7 +74,7 @@
 
 - testng
 ```
-<dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.14.3</version>
