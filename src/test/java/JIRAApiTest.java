@@ -21,7 +21,7 @@ public class JIRAApiTest {
                 given().
                         auth().preemptive().basic("webinar5", "webinar5").
                         when().
-                        get("http://jira.hillel.it/rest/api/2/issue/" + issueId).
+                        get("http://jira.hillel.it/rest/api/3/issue/" + issueId).
                         then().
                         extract().response();
 
@@ -31,6 +31,25 @@ public class JIRAApiTest {
 
         final Matcher<String> matcher = new MatchesPattern(Pattern.compile("[A-Z]+-[0-9]+"));
         assertTrue(matcher.matches(issueId));
+    }
+
+    @Test
+    public void createIssue() {
+
+        String issueJSON = JiraJSONObjects.newIssueJSON();
+
+
+        Response response = given().
+                auth().preemptive().basic("webinar5", "webinar5").
+                header("Content-Type", "application/json").
+                body(issueJSON).
+                when().
+                post("https://jira.hillel.it/rest/api/2/issue").
+                then().
+                extract().response();
+
+        assertEquals(response.statusCode(), 201);
+
     }
 
 }
