@@ -11,7 +11,38 @@ import static org.testng.Assert.assertTrue;
 
 public class JIRAApiTest {
 
-    public String issueId = "WEBINAR-11010";
+    public String issueId = "WEBINAR-11667";
+    public String userLogin = "webinar5";
+    public String userPswd = "webinar5";
+    public String jiraIssueUrl = "http://jira.hillel.it/rest/api/2/issue/";
+
+    public static String createdIssueId;
+
+
+    public String getIssueGetResponse(String issueId) {
+        Response response =
+
+                given().
+                        auth().preemptive().basic(userLogin, userPswd).
+                        when().
+                        get(jiraIssueUrl + issueId).
+                        then().
+                        extract().response();
+        return Integer.toString(response.statusCode());
+    }
+
+    public String deleteIssueGetResponse(String issueId) {
+        Response response =
+
+                given().
+                        auth().preemptive().basic(userLogin, userPswd).
+                        when().
+                        delete("https://jira.hillel.it/rest/api/2/issue/" + issueId).
+                        then().
+                        extract().response();
+        return Integer.toString(response.statusCode());
+    }
+
 
     @Test
     public void getExistingIssue() {
@@ -21,7 +52,7 @@ public class JIRAApiTest {
                 given().
                         auth().preemptive().basic("webinar5", "webinar5").
                         when().
-                        get("http://jira.hillel.it/rest/api/3/issue/" + issueId).
+                        get("https://jira.hillel.it/rest/api/2/issue/" + issueId).
                         then().
                         extract().response();
 
@@ -34,10 +65,9 @@ public class JIRAApiTest {
     }
 
     @Test
-    public void createIssue() {
+    public static void createIssue() {
 
         String issueJSON = JiraJSONObjects.newIssueJSON();
-
 
         Response response = given().
                 auth().preemptive().basic("webinar5", "webinar5").
@@ -49,7 +79,13 @@ public class JIRAApiTest {
                 extract().response();
 
         assertEquals(response.statusCode(), 201);
-
+        createdIssueId = response.then().extract().path("id");
     }
 
+    @Test
+    public void createAndDeleteIssue() {
+        createIssue();
+        assertTrue(deleteIssueGetResponse(createdIssueId).equals("204"));
+        assertEquals(getIssueGetResponse(createdIssueId), "404");
+    }
 }
