@@ -11,7 +11,7 @@ import static org.testng.Assert.assertTrue;
 
 public class JIRAApiTest {
 
-    public String issueId = "WEBINAR-11667";
+    public String issueId = "/WEBINAR-11667";
     public String userLogin = "webinar5";
     public String userPswd = "webinar5";
     public String jiraIssueUrl = "http://jira.hillel.it/rest/api/2/issue/";
@@ -37,7 +37,7 @@ public class JIRAApiTest {
                 given().
                         auth().preemptive().basic(userLogin, userPswd).
                         when().
-                        delete("https://jira.hillel.it/rest/api/2/issue/" + issueId).
+                        delete("https://jira.hillel.it/rest/api/2/issue" + issueId).
                         then().
                         extract().response();
         return Integer.toString(response.statusCode());
@@ -52,7 +52,7 @@ public class JIRAApiTest {
                 given().
                         auth().preemptive().basic("webinar5", "webinar5").
                         when().
-                        get("https://jira.hillel.it/rest/api/2/issue/" + issueId).
+                        get("https://jira.hillel.it/rest/api/2/issue" + issueId).
                         then().
                         extract().response();
 
@@ -87,5 +87,12 @@ public class JIRAApiTest {
         createIssue();
         assertTrue(deleteIssueGetResponse(createdIssueId).equals("204"));
         assertEquals(getIssueGetResponse(createdIssueId), "404");
+    }
+
+
+    @Test
+    public void getJiraIssueAPISteps(){
+        Response response = HTTPMethods.get(issueId);
+        assertEquals(200, response.statusCode());
     }
 }
