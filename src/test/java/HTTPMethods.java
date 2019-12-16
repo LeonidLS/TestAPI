@@ -9,7 +9,7 @@ public class HTTPMethods {
                 given().
                         auth().preemptive().basic(BasicConsts.USER_LOGIN, BasicConsts.USER_PSWD).
                         when().
-                        get(APIPathes.baseURL + APIPathes.issuesURL + issueId).
+                        get(APIPath.baseURL + APIPath.issuesURL + issueId).
                         then().
                         extract().response();
         return response;
